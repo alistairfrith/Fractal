@@ -1,0 +1,47 @@
+﻿<Window x:Class="Fractal1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Fractal1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="441" Width="888.687"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Grid Margin="10,4,2,3">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="150" />
+        </Grid.ColumnDefinitions>
+
+        <Image Name="myImage" MouseLeftButtonDown="myImage_MouseLeftButtonDown" MouseLeftButtonUp="myImage_MouseLeftButtonUp" MouseWheel="myImage_MouseWheel" Margin="0,0,0,63"/>
+        <TextBox x:Name="MsgLog" TextWrapping="Wrap" Text="TextBox" Height="58" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Visible"/>
+
+        <WrapPanel Orientation="Vertical" Grid.Column="1" >
+            <WrapPanel x:Name="FractalCoordinates" Orientation="Vertical">
+                <Label x:Name="label1" Content="Top Left" />
+                <TextBlock x:Name="TopLeftX" Text="{Binding Left}"  />
+                <TextBlock x:Name="TopLeftY" Text="{Binding Top}" />
+                <Label x:Name="label2" Content="Bottom Right" />
+                <TextBlock x:Name="BottomRightX" Text="{Binding Right}" />
+                <TextBlock x:Name="BottomRightY" Text="{Binding Bottom}" />
+            </WrapPanel>
+
+            <Button x:Name="button" Content="Reset" Click="button_Click"/>
+
+            <Label x:Name="labelDimensions" Content="Image Dimensions" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" x:Name="imageWidth" Text="{Binding Path=ActualWidth, ElementName=myImage, StringFormat={}{0:F1}}" />
+                <TextBlock Grid.Column="1" x:Name="label3" Text=" x " />
+                <TextBlock Grid.Column="2" x:Name="imageHeight" Text="{Binding Path=ActualHeight, ElementName=myImage, StringFormat={}{0:F1}}" />
+            </Grid>
+        </WrapPanel>
+
+    </Grid>
+</Window>
