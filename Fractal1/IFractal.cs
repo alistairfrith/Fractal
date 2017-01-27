@@ -15,5 +15,10 @@
             get;
         }
 
+        int MaxIterations
+        {
+            get;
+            set;
+        }
     }
 }

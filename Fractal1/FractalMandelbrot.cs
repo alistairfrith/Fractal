@@ -1,24 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Fractal1
 {
-    class FractalMadelbrot : IFractal
+    class FractalMadelbrot : IFractal, INotifyPropertyChanged
     {
         IArea InitialArea = new Area(new Cartesian(-2.5,1), new Cartesian(1,-1));
 
         IArea mRenderArea;
 
-        int MaxIterations = 255;
 
         public IArea RenderArea
         {
             get
             {
                 return mRenderArea;
+            }
+        }
+
+        int mMaxIterations = 255;
+        public int MaxIterations
+        {
+            get
+            {
+                return mMaxIterations;
+            }
+            set
+            {
+                mMaxIterations = value;
+                this.NotifyPropertyChanged("MaxIterations");
             }
         }
 
@@ -56,5 +70,13 @@ namespace Fractal1
 
             return iteration;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void NotifyPropertyChanged(string propName)
+        {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        }
+
     }
 }
