@@ -62,6 +62,7 @@ namespace Fractal1
 
             Fractal = new FractalMadelbrot(myImage.ActualWidth, myImage.ActualWidth);
             FractalCoordinates.DataContext = Fractal.RenderArea;
+            MaxIterations.DataContext = Fractal;
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -99,7 +100,7 @@ namespace Fractal1
 
             ICartesian proportion = DrawingArea.ProportionFromPoint(new Cartesian(x, y));
 
-            int v = f.PointValue(proportion) ;
+            int v = f.PointValue(proportion) % 256 ;
 
             //color = System.Drawing.Color.FromArgb(v, v, v);
             color = new ColorDemo.HSLColor((double)v, 200.0, 100.0);

@@ -27,6 +27,9 @@
                 <TextBlock x:Name="BottomRightY" Text="{Binding Bottom}" />
             </WrapPanel>
 
+            <Label>Maximum Iterations:</Label>
+            <TextBox x:Name="MaxIterations" Text="{Binding MaxIterations}" />
+
             <Button x:Name="button" Content="Reset" Click="button_Click"/>
 
             <Label x:Name="labelDimensions" Content="Image Dimensions" />
