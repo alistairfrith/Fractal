@@ -27,8 +27,16 @@
                 <TextBlock x:Name="BottomRightY" Text="{Binding Bottom}" />
             </WrapPanel>
 
-            <Label>Maximum Iterations:</Label>
-            <TextBox x:Name="MaxIterations" Text="{Binding MaxIterations}" />
+            <WrapPanel x:Name="Iterations">
+                <Label>Max Iterations:</Label>
+                <TextBox  Text="{Binding MaxIterations}" />
+            </WrapPanel>
+
+            <WrapPanel x:Name="Palette">
+                <Label>Palette:</Label>
+                <TextBox x:Name="PaletteName" Text="{Binding Name, Mode=OneWay}" />
+            </WrapPanel>
+
 
             <Button x:Name="button" Content="Reset" Click="button_Click"/>
 

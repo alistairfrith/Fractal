@@ -26,6 +26,7 @@ namespace Fractal1
     {
         IArea myDrawingArea ;
         IFractal myFractal;
+        IColourPalette myColourPalette;
 
         public IFractal Fractal
         {
@@ -60,9 +61,13 @@ namespace Fractal1
             System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(300,200);
             myImage.Source = BitmapToImageSource(myBitmap);
 
+            myColourPalette = new ColourPaletteHue();
+            //myColourPalette = new ColourPaletteGreyScale();
+
             Fractal = new FractalMadelbrot(myImage.ActualWidth, myImage.ActualWidth);
             FractalCoordinates.DataContext = Fractal.RenderArea;
-            MaxIterations.DataContext = Fractal;
+            Iterations.DataContext = Fractal;
+            Palette.DataContext = myColourPalette;
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -96,16 +101,11 @@ namespace Fractal1
 
         private System.Drawing.Color GetColourForCoordinate(IFractal f, double x, double y)
         {
-            System.Drawing.Color color;
-
             ICartesian proportion = DrawingArea.ProportionFromPoint(new Cartesian(x, y));
 
-            int v = f.PointValue(proportion) % 256 ;
+            int v = f.PointValue(proportion) ;
 
-            //color = System.Drawing.Color.FromArgb(v, v, v);
-            color = new ColorDemo.HSLColor((double)v, 200.0, 100.0);
-
-            return color;
+            return myColourPalette.ColourFromValue(v);
         }
 
         private BitmapImage BitmapToImageSource(Bitmap bitmap)
