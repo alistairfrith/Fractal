@@ -24,35 +24,23 @@ namespace Fractal1
     /// </summary>
     public partial class MainWindow : Window
     {
-        IArea myDrawingArea ;
-        IFractal myFractal;
-        IColourPalette myColourPalette;
+        IColourPalette _ColourPalette;
 
-        public IFractal Fractal
-        {
-            get
-            {
-                return myFractal;
-            }
+        //IFractal myFractal;
+        //public IFractal Fractal
+        //{
+        //    get
+        //    {
+        //        return myFractal;
+        //    }
 
-            set
-            {
-                myFractal = value;
-            }
-        }
+        //    set
+        //    {
+        //        myFractal = value;
+        //    }
+        //}
 
-        public IArea DrawingArea
-        {
-            get
-            {
-                return myDrawingArea;
-            }
-
-            set
-            {
-                myDrawingArea = value;
-            }
-        }
+        FractalRenderer _Renderer;
 
         public MainWindow()
         {
@@ -61,13 +49,17 @@ namespace Fractal1
             System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(300,200);
             myImage.Source = BitmapToImageSource(myBitmap);
 
-            myColourPalette = new ColourPaletteHue();
+            _ColourPalette = new ColourPaletteHue();
             //myColourPalette = new ColourPaletteGreyScale();
 
-            Fractal = new FractalMadelbrot(myImage.ActualWidth, myImage.ActualWidth);
-            FractalCoordinates.DataContext = Fractal.RenderArea;
-            Iterations.DataContext = Fractal;
-            Palette.DataContext = myColourPalette;
+            IFractal fractal = new FractalMadelbrot(myImage.ActualWidth, myImage.ActualWidth);
+            FractalCoordinates.DataContext = fractal.RenderArea;
+            Iterations.DataContext = fractal;
+            Palette.DataContext = _ColourPalette;
+
+            Area drawingArea = new Area(new Cartesian(0, myImage.ActualWidth), new Cartesian(myImage.ActualWidth, 0));
+            _Renderer = new FractalRenderer(fractal, drawingArea, _ColourPalette);
+
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -77,35 +69,18 @@ namespace Fractal1
 
         private void Render(double ImageWidth, double ImageHeight)
         {
-            DrawingArea = new Area(new Cartesian(0, ImageHeight), new Cartesian(ImageWidth, 0));
+            Area DrawingArea = new Area(new Cartesian(0, ImageHeight), new Cartesian(ImageWidth, 0));
 
             DateTime t1 = DateTime.Now;
+            System.Drawing.Bitmap myBitmap = _Renderer.render(ImageWidth, ImageHeight);
 
-            System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap((int)Math.Floor(ImageWidth), (int)Math.Floor(ImageHeight));
-
-            for (int x = 0; x < myBitmap.Width; x++)
-            {
-                for (int y = 0; y < myBitmap.Height; y++)
-                {
-                    System.Drawing.Color color = GetColourForCoordinate(Fractal, x, y);
-                    myBitmap.SetPixel(x, y, color);
-                }
-            }
             myImage.Source = BitmapToImageSource(myBitmap);
 
             DateTime t2 = DateTime.Now;
 
             TimeSpan elapsed = t2 - t1;
-            MsgLog.Text += $"Rendering {ImageWidth}x{ImageHeight} took {elapsed}\n";
-        }
-
-        private System.Drawing.Color GetColourForCoordinate(IFractal f, double x, double y)
-        {
-            ICartesian proportion = DrawingArea.ProportionFromPoint(new Cartesian(x, y));
-
-            int v = f.PointValue(proportion) ;
-
-            return myColourPalette.ColourFromValue(v);
+            MsgLog.AppendText ($"Rendering {ImageWidth}x{ImageHeight} took {elapsed}\n");
+            MsgLog.ScrollToEnd();
         }
 
         private BitmapImage BitmapToImageSource(Bitmap bitmap)
@@ -137,11 +112,11 @@ namespace Fractal1
         private void myImage_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             ICartesian imageCenterCoordinates = new Cartesian(e.GetPosition(myImage).X, e.GetPosition(myImage).Y);
-            ICartesian imageCenterProportion = DrawingArea.ProportionFromPoint(imageCenterCoordinates);
 
             double zoomFactor = 3;
             zoomFactor = (e.Delta > 0) ? zoomFactor : 1/zoomFactor;
-            Fractal.Zoom(imageCenterProportion, new Cartesian(zoomFactor, zoomFactor));
+
+            _Renderer.Zoom(imageCenterCoordinates, zoomFactor);
             Render(myImage.ActualWidth, myImage.ActualHeight);
         }
 

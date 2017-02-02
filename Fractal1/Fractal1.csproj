@@ -68,6 +68,7 @@
     <Compile Include="ColourPaletteGreyScale.cs" />
     <Compile Include="ColourPaletteHue.cs" />
     <Compile Include="FractalMandelbrot.cs" />
+    <Compile Include="FractalRenderer.cs" />
     <Compile Include="HSLColor.cs" />
     <Compile Include="IArea.cs" />
     <Compile Include="ICartesian.cs" />
