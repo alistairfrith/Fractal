@@ -20,5 +20,7 @@
             get;
             set;
         }
+
+        void Reset();
     }
 }

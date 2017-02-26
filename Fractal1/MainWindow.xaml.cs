@@ -24,33 +24,35 @@ namespace Fractal1
     /// </summary>
     public partial class MainWindow : Window
     {
-        IArea myDrawingArea ;
-        IFractal myFractal;
-        IColourPalette myColourPalette;
 
+        List<IColourPalette> _ColourPalettes;
+        IColourPalette _ColourPalette;
+
+        IFractal _Fractal;
         public IFractal Fractal
         {
             get
             {
-                return myFractal;
+                return _Fractal;
             }
 
             set
             {
-                myFractal = value;
+                _Fractal = value;
             }
         }
 
+        IArea _DrawingArea;
         public IArea DrawingArea
         {
             get
             {
-                return myDrawingArea;
+                return _DrawingArea;
             }
 
             set
             {
-                myDrawingArea = value;
+                _DrawingArea = value;
             }
         }
 
@@ -61,17 +63,22 @@ namespace Fractal1
             System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap(300,200);
             myImage.Source = BitmapToImageSource(myBitmap);
 
-            myColourPalette = new ColourPaletteHue();
-            //myColourPalette = new ColourPaletteGreyScale();
 
             Fractal = new FractalMadelbrot(myImage.ActualWidth, myImage.ActualWidth);
             FractalCoordinates.DataContext = Fractal.RenderArea;
             Iterations.DataContext = Fractal;
-            Palette.DataContext = myColourPalette;
+
+
+            _ColourPalettes = new List<IColourPalette>();
+            _ColourPalettes.Add(new ColourPaletteGreyScale());
+            _ColourPalettes.Add(new ColourPaletteHue());
+            PaletteList.ItemsSource = _ColourPalettes;
+            PaletteList.SelectedIndex = 0;
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void resetButton_Click(object sender, RoutedEventArgs e)
         {
+            Fractal.Reset();
             Render(myImage.ActualWidth, myImage.ActualHeight);
         }
 
@@ -105,7 +112,7 @@ namespace Fractal1
 
             int v = f.PointValue(proportion) ;
 
-            return myColourPalette.ColourFromValue(v);
+            return _ColourPalette.ColourFromValue(v);
         }
 
         private BitmapImage BitmapToImageSource(Bitmap bitmap)
@@ -145,5 +152,15 @@ namespace Fractal1
             Render(myImage.ActualWidth, myImage.ActualHeight);
         }
 
+        private void PaletteList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox b = (ComboBox)sender;
+            _ColourPalette = (IColourPalette)b.SelectedItem;
+        }
+
+        private void redrawButton_Click(object sender, RoutedEventArgs e)
+        {
+            Render(myImage.ActualWidth, myImage.ActualHeight);
+        }
     }
 }

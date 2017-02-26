@@ -78,5 +78,9 @@ namespace Fractal1
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
         }
 
+        public void Reset()
+        {
+            mRenderArea = InitialArea;
+        }
     }
 }

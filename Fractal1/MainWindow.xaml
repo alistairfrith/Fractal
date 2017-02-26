@@ -32,13 +32,19 @@
                 <TextBox  Text="{Binding MaxIterations}" />
             </WrapPanel>
 
-            <WrapPanel x:Name="Palette">
-                <Label>Palette:</Label>
-                <TextBox x:Name="PaletteName" Text="{Binding Name, Mode=OneWay}" />
+            <ComboBox x:Name="PaletteList" SelectionChanged="PaletteList_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+
+            <WrapPanel Orientation="Horizontal">
+                <Button x:Name="resetButton" Content="Reset" Click="resetButton_Click"/>
+                <Button x:Name="redrawButton" Content="Redraw" Click="redrawButton_Click"/>
             </WrapPanel>
-
-
-            <Button x:Name="button" Content="Reset" Click="button_Click"/>
 
             <Label x:Name="labelDimensions" Content="Image Dimensions" />
             <Grid>
