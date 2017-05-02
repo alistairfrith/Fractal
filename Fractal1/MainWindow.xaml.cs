@@ -90,14 +90,12 @@ namespace Fractal1
 
             System.Drawing.Bitmap myBitmap = new System.Drawing.Bitmap((int)Math.Floor(ImageWidth), (int)Math.Floor(ImageHeight));
 
-            for (int x = 0; x < myBitmap.Width; x++)
-            {
-                for (int y = 0; y < myBitmap.Height; y++)
-                {
-                    System.Drawing.Color color = GetColourForCoordinate(Fractal, x, y);
-                    myBitmap.SetPixel(x, y, color);
-                }
-            }
+            // Here, we need to get the fractal to generate a 2-d array of values
+            int[][] array = Fractal.ArrayValues(myBitmap.Width, myBitmap.Height, DrawingArea);
+
+            // Then we need to convert that array into a bitmap.
+            ArrayToBitmap(array, ref myBitmap); // <-- by reference
+
             myImage.Source = BitmapToImageSource(myBitmap);
 
             DateTime t2 = DateTime.Now;
@@ -106,14 +104,26 @@ namespace Fractal1
             MsgLog.Text += $"Rendering {ImageWidth}x{ImageHeight} took {elapsed}\n";
         }
 
-        private System.Drawing.Color GetColourForCoordinate(IFractal f, double x, double y)
+        private void ArrayToBitmap(int[][] array, ref Bitmap myBitmap)
         {
-            ICartesian proportion = DrawingArea.ProportionFromPoint(new Cartesian(x, y));
-
-            int v = f.PointValue(proportion) ;
-
-            return _ColourPalette.ColourFromValue(v);
+            for (int x = 0; x < myBitmap.Width; x++)
+            {
+                for (int y = 0; y < myBitmap.Height; y++)
+                {
+                    System.Drawing.Color color = _ColourPalette.ColourFromValue(array[x][y]);
+                    myBitmap.SetPixel(x, y, color);
+                }
+            }
         }
+
+        //private System.Drawing.Color GetColourForCoordinate(IFractal f, double x, double y)
+        //{
+        //    ICartesian proportion = DrawingArea.ProportionFromPoint(new Cartesian(x, y));
+
+        //    int v = f.PointValue(proportion) ;
+
+        //    return _ColourPalette.ColourFromValue(v);
+        //}
 
         private BitmapImage BitmapToImageSource(Bitmap bitmap)
         {

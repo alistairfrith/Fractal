@@ -82,5 +82,32 @@ namespace Fractal1
         {
             mRenderArea = InitialArea;
         }
+
+        public int[][] ArrayValues(int width, int height, IArea drawingArea)
+        {
+            int[][] result = new int[width][];
+
+            for (int colNum=0; colNum< width; colNum++)
+            {
+                result[colNum] = ColumnValues(colNum, height, drawingArea);
+            }
+
+            return result;
+        }
+
+        private int[] ColumnValues(int colNum, int height, IArea drawingArea)
+        {
+            int[] column = new int[height];
+
+            for (int rowNum = 0; rowNum<height; rowNum++)
+            {
+
+                ICartesian coordinate = drawingArea.ProportionFromPoint(new Cartesian(colNum, rowNum));
+
+                column[rowNum] = PointValue(coordinate);
+            }
+
+            return column;
+        }
     }
 }

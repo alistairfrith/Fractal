@@ -22,5 +22,9 @@
         }
 
         void Reset();
+
+        // Returns a 2-d array of the specified dimensions containing point values within
+        // the current viewing area
+        int[][] ArrayValues(int width, int height, IArea drawingArea);
     }
 }
